@@ -16,4 +16,13 @@ export class UsersController {
 
     return new UserView(user).render() as UserView;
   }
+
+  @Get('/:userId/action-count')
+  getActionCountByUserId(@Param(new ValidationPipe({ transform: true })) queryParams: GetUserByIdDto) {
+    const actionCount = this.usersService.getActionCountByUserId(queryParams.userId);
+
+    return {
+      count: actionCount,
+    };
+  }
 }

@@ -8,5 +8,6 @@ export abstract class UserDataSource {
 
 export abstract class ActionDataSource {
   abstract getOne(id: number): Action;
+  abstract getActionsByUserId(userId: number): Action[];
   abstract getAll(): Action[];
 }

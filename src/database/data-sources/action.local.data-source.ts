@@ -37,6 +37,11 @@ export class ActionLocalDataSource extends ActionDataSource {
   getOne(id: number): Action {
     return this.actions.find(user => user.id === id);
   }
+
+  getActionsByUserId(userId: number): Action[] {
+    return this.actions.filter(action => action.userId === userId);
+  }
+
   getAll(): Action[] {
     return this.actions;
   }
