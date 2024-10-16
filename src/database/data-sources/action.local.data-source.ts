@@ -8,6 +8,8 @@ import { Injectable } from '@nestjs/common';
 export class ActionLocalDataSource extends ActionDataSource {
   private USER_DATABASE_FILE_PATH = path.join(__dirname, '../../../data/actions.json');
   private actions: Action[] = [];
+  private actionTypeCache: Set<string> = new Set();
+  private nextActionsProbabilityMap: Map<string, Map<string, number>> = new Map();
 
   constructor() {
     super();
@@ -21,6 +23,10 @@ export class ActionLocalDataSource extends ActionDataSource {
 
     const actions = JSON.parse(FileSystemUtils.readFile(this.USER_DATABASE_FILE_PATH).toString());
     for (const action of actions) {
+      if (!this.actionTypeCache.has(action.type)) {
+        this.actionTypeCache.add(action.type);
+      }
+
       this.actions.push(
         new Action(
           action.id,
@@ -31,15 +37,57 @@ export class ActionLocalDataSource extends ActionDataSource {
         )
       );
     }
-    console.log('Action database loaded');
+
+    this.actions.sort((firstAction, secondAction) => firstAction.createdAt.getTime() - secondAction.createdAt.getTime());
+
+    console.log(`Action database loaded, ${this.actions.length} actions loaded.`);
   }
   
+  isValidActionType(actionType: string): boolean {
+    return this.actionTypeCache.has(actionType);
+  }
+
   getOne(id: number): Action {
     return this.actions.find(user => user.id === id);
   }
 
   getActionsByUserId(userId: number): Action[] {
     return this.actions.filter(action => action.userId === userId);
+  }
+
+  getNextActionsProbabilityByActionType(actionType: string): Map<string, number> {
+    if (this.nextActionsProbabilityMap.has(actionType)) {
+      return this.nextActionsProbabilityMap.get(actionType);
+    }
+
+    const nextActionsCount: Map<string, number> = new Map();
+    let totalActionCount = 0;
+
+    for (let actionIndex = 0; actionIndex < this.actions.length - 1; actionIndex++) {
+      const action = this.actions[actionIndex];
+      const nextAction = this.actions[actionIndex + 1];
+
+      if (action.type !== actionType) {
+        continue;
+      }
+
+      totalActionCount++;
+      if (!nextActionsCount.has(nextAction.type)) {
+        nextActionsCount.set(nextAction.type, 1);
+      } else {
+        nextActionsCount.set(nextAction.type, nextActionsCount.get(nextAction.type) + 1);
+      }
+    }
+
+    const nextActionsProbability: Map<string, number> = new Map();
+    nextActionsCount.forEach((value, key) => {
+      const probability = value / totalActionCount;
+      nextActionsProbability.set(key, probability);
+    });
+
+    this.nextActionsProbabilityMap.set(actionType, nextActionsProbability);
+
+    return nextActionsProbability;
   }
 
   getAll(): Action[] {

@@ -7,7 +7,9 @@ export abstract class UserDataSource {
 }
 
 export abstract class ActionDataSource {
+  abstract isValidActionType(actionType: string): boolean;
   abstract getOne(id: number): Action;
   abstract getActionsByUserId(userId: number): Action[];
+  abstract getNextActionsProbabilityByActionType(actionType: string): Map<string, number>;
   abstract getAll(): Action[];
 }

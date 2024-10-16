@@ -11,4 +11,8 @@ export class ActionsService {
   ) {
     this.actionDataSource = this.databaseService.loadActionDataSource();
   }
+
+  getNextActionsProbabilityByActionType(actionType: string) {
+    return this.actionDataSource.getNextActionsProbabilityByActionType(actionType);
+  }
 }

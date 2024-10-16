@@ -29,7 +29,7 @@ export class UserLocalDataSource extends UserDataSource {
         )
       );
     }
-    console.log('User database loaded');
+    console.log(`User database loaded, ${this.users.length} users loaded.`);
   }
   
   getOne(id: number): User | undefined {
