@@ -13,3 +13,11 @@ export abstract class ActionDataSource {
   abstract getNextActionsProbabilityByActionType(actionType: string): Map<string, number>;
   abstract getAll(): Action[];
 }
+
+export abstract class ReferralRelationshipDataSource {
+  abstract buildDataStructure(users: User[], actions: Action[]);
+  protected abstract calculateReferralIndexForUser(userId: number);
+  protected abstract calculateReferralIndexForAllUsers(users: User[]);
+  abstract getReferralIndexByUserId(userId: number): number;
+  abstract getReferralIndexForAllUsers(): Map<number, number>;
+}

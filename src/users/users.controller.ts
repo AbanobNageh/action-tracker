@@ -7,6 +7,11 @@ import { UserView } from '../core-data/view/user.view';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('/referral-index')
+  getUsersReferralIndex() {
+    return Object.fromEntries(this.usersService.getUsersReferralIndex());
+  }
+
   @Get('/:userId')
   getUserById(@Param(new ValidationPipe({ transform: true })) queryParams: GetUserByIdDto): UserView {
     const user = this.usersService.getUserById(queryParams.userId);
