@@ -19,6 +19,7 @@ export class UserLocalDataSource extends UserDataSource {
       throw new Error('User database file does not exist');
     }
 
+    this.users = [];
     const users = JSON.parse(FileSystemUtils.readFile(this.USER_DATABASE_FILE_PATH).toString());
     for (const user of users) {
       this.users.push(

@@ -10,6 +10,7 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
 
   buildDataStructure(users: User[], actions: Action[]) {
     this.adjacencyList.clear();
+    this.referralIndices.clear();
     users.forEach((user) => this.adjacencyList.set(user.id, []));
 
     actions.forEach((action) => {
@@ -74,5 +75,13 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
       }
     }
     return count;
+  }
+
+  getAdjacencyList() {
+    return this.adjacencyList;
+  }
+
+  getReferralIndices() {
+    return this.referralIndices;
   }
 }

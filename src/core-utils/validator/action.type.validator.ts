@@ -36,7 +36,7 @@ export class IsValidActionTypeRule implements ValidatorConstraintInterface {
     this.actionDataSource = this.databaseService.loadActionDataSource();
   }
 
-  async validate(value: number, args: ValidationArguments) {
+  async validate(value: string, args: ValidationArguments) {
     if (isEmpty(value)) {
       return false;
     }

@@ -19,7 +19,7 @@ export class GlobalExceptionFilteer extends BaseExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
-    let serverException;
+    let serverException: ServerException;
 
     try {
       serverException = this.exceptionToServerException(exception);
@@ -29,9 +29,6 @@ export class GlobalExceptionFilteer extends BaseExceptionFilter {
         error: 'Internal Server Error',
       };
     }
-
-    console.log('Error:');
-    console.log(exception);
 
     return response.status(serverException.statusCode).json(serverException);
   }
@@ -77,6 +74,7 @@ export class GlobalExceptionFilteer extends BaseExceptionFilter {
 
   private formatGenericException(exception: HttpException) {
     const responseBody = exception.getResponse();
+    const isResponseBodyAString = typeof responseBody === 'string';
     const doesErrorExist = (responseBody as any).error && (responseBody as any).error !== '';
     const doesMessageExist = (responseBody as any).message && (responseBody as any).message !== '';
 
@@ -84,6 +82,7 @@ export class GlobalExceptionFilteer extends BaseExceptionFilter {
       statusCode: exception.getStatus(),
       ...(doesErrorExist && { error: (responseBody as any).error }),
       ...(doesMessageExist && { message: (responseBody as any).message }),
+      ...(isResponseBodyAString && { message: responseBody as string }),
     };
   }
 }

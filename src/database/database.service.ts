@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionDataSource, ReferralRelationshipDataSource } from '../database/data-sources/data-source';
+import { ActionDataSource, ReferralRelationshipDataSource, UserDataSource } from '../database/data-sources/data-source';
 import { ModuleRef } from '@nestjs/core';
 import { ActionLocalDataSource } from '../database/data-sources/action.local.data-source';
 import { UserLocalDataSource } from './data-sources/user.local.data-source';
@@ -11,7 +11,7 @@ export class DatabaseService {
     private moduleRef: ModuleRef,
   ) {}
 
-  loadUserDataSource() {
+  loadUserDataSource(): UserDataSource {
     switch (process.env.DATA_SOUCE_TYPE) {
       case 'local':
         return this.moduleRef.get(UserLocalDataSource, { strict: false });

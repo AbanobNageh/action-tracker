@@ -21,6 +21,9 @@ export class ActionLocalDataSource extends ActionDataSource {
       throw new Error('Action database file does not exist');
     }
 
+    this.actions = [];
+    this.actionTypeCache = new Set();
+    this.nextActionsProbabilityMap = new Map();
     const actions = JSON.parse(FileSystemUtils.readFile(this.USER_DATABASE_FILE_PATH).toString());
     for (const action of actions) {
       if (!this.actionTypeCache.has(action.type)) {
