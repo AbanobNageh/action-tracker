@@ -12,13 +12,13 @@ import {
 import { ActionDataSource } from '../../database/data-sources/data-source';
 import { DatabaseService } from '../../database/database.service';
 
-export function IsValidActionType(variableToLoadModelInto?: string, validationOptions?: ValidationOptions) {
+export function IsValidActionType(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: 'IsValidActionType',
       target: object.constructor,
       propertyName: propertyName,
-      constraints: [variableToLoadModelInto],
+      constraints: [],
       options: validationOptions,
       validator: IsValidActionTypeRule,
     });

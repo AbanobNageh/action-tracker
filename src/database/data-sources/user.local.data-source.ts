@@ -15,7 +15,7 @@ export class UserLocalDataSource extends UserDataSource {
   }
 
   loadUserDatabaseFromFile() {
-    if (!FileSystemUtils.doesPathExists(this.USER_DATABASE_FILE_PATH)) {
+    if (!FileSystemUtils.doesPathExist(this.USER_DATABASE_FILE_PATH)) {
       throw new Error('User database file does not exist');
     }
 

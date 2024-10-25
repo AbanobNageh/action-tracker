@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ActionLocalDataSource extends ActionDataSource {
-  private USER_DATABASE_FILE_PATH = path.join(__dirname, '../../../data/actions.json');
+  private ACTION_DATABASE_FILE_PATH = path.join(__dirname, '../../../data/actions.json');
   private actions: Action[] = [];
   private actionTypeCache: Set<string> = new Set();
   private nextActionsProbabilityMap: Map<string, Map<string, number>> = new Map();
@@ -17,14 +17,14 @@ export class ActionLocalDataSource extends ActionDataSource {
   }
 
   loadActionDatabaseFromFile() {
-    if (!FileSystemUtils.doesPathExists(this.USER_DATABASE_FILE_PATH)) {
+    if (!FileSystemUtils.doesPathExist(this.ACTION_DATABASE_FILE_PATH)) {
       throw new Error('Action database file does not exist');
     }
 
     this.actions = [];
     this.actionTypeCache = new Set();
     this.nextActionsProbabilityMap = new Map();
-    const actions = JSON.parse(FileSystemUtils.readFile(this.USER_DATABASE_FILE_PATH).toString());
+    const actions = JSON.parse(FileSystemUtils.readFile(this.ACTION_DATABASE_FILE_PATH).toString());
     for (const action of actions) {
       if (!this.actionTypeCache.has(action.type)) {
         this.actionTypeCache.add(action.type);
@@ -51,7 +51,7 @@ export class ActionLocalDataSource extends ActionDataSource {
   }
 
   getOne(id: number): Action {
-    return this.actions.find(user => user.id === id);
+    return this.actions.find(action => action.id === id);
   }
 
   getActionsByUserId(userId: number): Action[] {

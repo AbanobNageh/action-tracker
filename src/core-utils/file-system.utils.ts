@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
 export class FileSystemUtils {
-  static doesPathExists(path: string): boolean {
+  static doesPathExist(path: string): boolean {
     return fs.existsSync(path)
   }
 

@@ -4,7 +4,7 @@ export class ActionView {
   id: number;
 	type: string;
 	userId: number;
-	targetUser: number;   
+	targetUser: number;
 	createdAt: Date;
 
   constructor(
@@ -13,13 +13,13 @@ export class ActionView {
 
   render(): ActionView | ActionView[] {
     if (Array.isArray(this.actionData)) {
-      return this.renderUserViewList(this.actionData);
+      return this.renderActionViewList(this.actionData);
     } else {
-      return this.renderUserView(this.actionData);
+      return this.renderActionView(this.actionData);
     }
   }
 
-  private renderUserView(action: Action): ActionView {
+  private renderActionView(action: Action): ActionView {
     return {
       id: action.id,
       type: action.type,
@@ -29,7 +29,7 @@ export class ActionView {
     } as ActionView;
   }
 
-  private renderUserViewList(actionList: Action[]): ActionView[] {
-    return actionList.map((user) => this.renderUserView(user))
+  private renderActionViewList(actionList: Action[]): ActionView[] {
+    return actionList.map((action) => this.renderActionView(action))
   }
 }

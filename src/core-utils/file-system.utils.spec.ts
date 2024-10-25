@@ -22,7 +22,7 @@ describe('FileSystemUtils', () => {
     });
 
     it('Should return true if path exists', () => {
-      const result = FileSystemUtils.doesPathExists('path/to/file');
+      const result = FileSystemUtils.doesPathExist('path/to/file');
       
       expect(result).toStrictEqual(true);
       expect(fs.existsSync).toHaveBeenCalledWith('path/to/file');
@@ -31,7 +31,7 @@ describe('FileSystemUtils', () => {
     it('Should return false if path does not exist', () => {
       mockExistsSync.mockReset().mockReturnValueOnce(false);
 
-      const result = FileSystemUtils.doesPathExists('path/to/nonexistent/file');
+      const result = FileSystemUtils.doesPathExist('path/to/nonexistent/file');
 
       expect(result).toStrictEqual(false,);
       expect(fs.existsSync).toHaveBeenCalledWith('path/to/nonexistent/file');

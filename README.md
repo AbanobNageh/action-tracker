@@ -6,10 +6,10 @@ A project created using the [Nest](https://github.com/nestjs/nest) framework. Th
 
 This project consists of the following modules:
 1. Actions module: Contains endpoints and logic directly related to actions.
-2. Core-data: Contains classes that represent entities in the system.
-3. Core-utils: Contains common helper functions used throughout the system.
-4. Database: Contains database implementation and data-source files used to access different data in the system.
-5. Users: Contains endpoints and logic directly related to the users.
+2. Core-data module: Contains classes that represent entities in the system.
+3. Core-utils module: Contains common helper functions used throughout the system.
+4. Database module: Contains database implementation and data-source files used to access different data in the system.
+5. Users module: Contains endpoints and logic directly related to the users.
 
 ## Project setup
 

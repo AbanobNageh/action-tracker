@@ -10,7 +10,7 @@ describe('UserLocalDataSource', () => {
 
   beforeAll(() => {
     mockUser = { id: 1, name: 'test', createdAt: new Date().toISOString() };
-    mockDoesPathExist = jest.spyOn(FileSystemUtils, 'doesPathExists').mockReturnValueOnce(true);
+    mockDoesPathExist = jest.spyOn(FileSystemUtils, 'doesPathExist').mockReturnValueOnce(true);
     mockReadFile = jest.spyOn(FileSystemUtils, 'readFile').mockReturnValueOnce(
       Buffer.from(JSON.stringify([mockUser])),
     );

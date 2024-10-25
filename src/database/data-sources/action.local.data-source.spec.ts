@@ -18,7 +18,7 @@ describe('ActionLocalDataSource', () => {
       targetUser: 2,
       createdAt: '2024-10-17T18:27:36.186Z',
     };
-    mockDoesPathExist = jest.spyOn(FileSystemUtils, 'doesPathExists').mockReturnValue(true);
+    mockDoesPathExist = jest.spyOn(FileSystemUtils, 'doesPathExist').mockReturnValue(true);
     mockReadFile = jest.spyOn(FileSystemUtils, 'readFile').mockReturnValue(Buffer.from(JSON.stringify([mockAction])));
 
     dataSource = new ActionLocalDataSource();
