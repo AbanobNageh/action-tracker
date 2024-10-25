@@ -24,6 +24,11 @@ export class UsersController {
 
   @Get('/:userId/action-count')
   getActionCountByUserId(@Param(new ValidationPipe({ transform: true })) queryParams: GetUserByIdDto) {
+    const user = this.usersService.getUserById(queryParams.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     const actionCount = this.usersService.getActionCountByUserId(queryParams.userId);
 
     return {

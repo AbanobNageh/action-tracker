@@ -37,6 +37,17 @@ describe('Action Tracker (e2e)', () => {
           });
       });
 
+      it('/:userId (GET) - Valid but non-existant user.', () => {
+        return request(app.getHttpServer())
+          .get('/users/999999')
+          .expect(404)
+          .expect({
+            statusCode: 404,
+            error: "Not Found",
+            message: "User not found"
+        });
+      });
+
       it('/:userId (GET)', () => {
         return request(app.getHttpServer()).get('/users/1').expect(200).expect({
           id: 1,
@@ -60,6 +71,17 @@ describe('Action Tracker (e2e)', () => {
             ],
             error: 'Bad Request',
           });
+      });
+
+      it('/:userId/action-count (GET) - Valid but non-existant user.', () => {
+        return request(app.getHttpServer())
+          .get('/users/999999/action-count')
+          .expect(404)
+          .expect({
+            statusCode: 404,
+            error: "Not Found",
+            message: "User not found"
+        });
       });
 
       it('/:userId/action-count (GET)', () => {

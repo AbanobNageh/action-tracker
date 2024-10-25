@@ -113,17 +113,27 @@ describe('UsersController', () => {
 
   describe('getActionCountByUserId', () => {
     let mockQueryParams;
+    let mockUser;
     let mockActionCount;
 
     beforeEach(() => {
       mockQueryParams = { userId: '1' };
+      mockUser = { id: '1', name: 'Test User' };
       mockActionCount = 5;
 
+      jest.spyOn(usersService, 'getUserById').mockReturnValueOnce(mockUser);
       jest.spyOn(usersService, 'getActionCountByUserId').mockReturnValueOnce(mockActionCount);
     });
 
     afterEach(() => {
+      jest.spyOn(usersService, 'getUserById').mockRestore();
       jest.spyOn(usersService, 'getActionCountByUserId').mockRestore();
+    });
+
+    it('Should throw NotFoundException if user is not found', () => {
+      jest.spyOn(usersService, 'getUserById').mockReset().mockReturnValueOnce(undefined);
+
+      expect(() => controller.getActionCountByUserId(mockQueryParams)).toThrow(NotFoundException);
     });
 
     it('Should return the action count for the user', () => {
