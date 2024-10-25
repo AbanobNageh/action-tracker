@@ -22,7 +22,7 @@ describe('Action Tracker (e2e)', () => {
 
   describe('Users endpoints', () => {
     describe('/:userId (GET)', () => {
-      it('/:userId (GET) - invalid user id.', () => {
+      it('invalid user id.', () => {
         return request(app.getHttpServer())
           .get('/users/aa')
           .expect(400)
@@ -37,7 +37,7 @@ describe('Action Tracker (e2e)', () => {
           });
       });
 
-      it('/:userId (GET) - Valid but non-existant user.', () => {
+      it('Valid user id but non-existant user.', () => {
         return request(app.getHttpServer())
           .get('/users/999999')
           .expect(404)
@@ -48,7 +48,7 @@ describe('Action Tracker (e2e)', () => {
         });
       });
 
-      it('/:userId (GET)', () => {
+      it('Returns the requested user.', () => {
         return request(app.getHttpServer()).get('/users/1').expect(200).expect({
           id: 1,
           name: 'Ferdinande',
@@ -58,7 +58,7 @@ describe('Action Tracker (e2e)', () => {
     });
 
     describe('/:userId/action-count (GET)', () => {
-      it('/:userId/action-count (GET) - invalid user id.', () => {
+      it('invalid user id.', () => {
         return request(app.getHttpServer())
           .get('/users/a/action-count')
           .expect(400)
@@ -73,7 +73,7 @@ describe('Action Tracker (e2e)', () => {
           });
       });
 
-      it('/:userId/action-count (GET) - Valid but non-existant user.', () => {
+      it('Valid user id but non-existant user.', () => {
         return request(app.getHttpServer())
           .get('/users/999999/action-count')
           .expect(404)
@@ -84,7 +84,7 @@ describe('Action Tracker (e2e)', () => {
         });
       });
 
-      it('/:userId/action-count (GET)', () => {
+      it('Returns the requested user action count.', () => {
         return request(app.getHttpServer())
           .get('/users/1/action-count')
           .expect(200)
@@ -94,21 +94,23 @@ describe('Action Tracker (e2e)', () => {
       });
     });
 
-    it('/referral-index (GET)', () => {
-      return request(app.getHttpServer())
-        .get('/users/referral-index')
-        .expect(200)
-        .then((response) => {
-          expect(Object.keys(response.body).length).toStrictEqual(1000);
-          expect(response.body['1']).toStrictEqual(1);
-          expect(response.body['35']).toStrictEqual(4);
-        });
+    describe('/referral-index (GET)', () => {
+      it('Returns the referral indices for all users', () => {
+        return request(app.getHttpServer())
+          .get('/users/referral-index')
+          .expect(200)
+          .then((response) => {
+            expect(Object.keys(response.body).length).toStrictEqual(1000);
+            expect(response.body['1']).toStrictEqual(1);
+            expect(response.body['35']).toStrictEqual(4);
+          });
+      });
     });
   });
 
   describe('Actions endpoints', () => {
     describe('/:actionType/next-actions (GET)', () => {
-      it('/:actionType/next-actions (GET) - invalid action type.', () => {
+      it('invalid action type.', () => {
         return request(app.getHttpServer())
           .get('/actions/a/next-actions')
           .expect(400)
@@ -120,7 +122,7 @@ describe('Action Tracker (e2e)', () => {
           });
       });
 
-      it('/:actionType/next-actions (GET)', () => {
+      it('Returns the correct next action probabilities', () => {
         return request(app.getHttpServer())
           .get('/actions/WELCOME/next-actions')
           .expect(200)
