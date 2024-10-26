@@ -1,7 +1,7 @@
 import { User } from '../../core-data/models/user.model';
 import { ReferralRelationshipDataSource } from './data-source';
 import { Injectable } from '@nestjs/common';
-import { Action } from 'src/core-data/models/action.model';
+import { Action } from '../../core-data/models/action.model';
 
 @Injectable()
 export class GraphReferralRelationshipDataSource extends ReferralRelationshipDataSource {
@@ -11,6 +11,7 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
   buildDataStructure(users: User[], actions: Action[]) {
     this.adjacencyList.clear();
     this.referralIndices.clear();
+
     users.forEach((user) => this.adjacencyList.set(user.id, []));
 
     actions.forEach((action) => {
@@ -30,11 +31,11 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
     });
 
     this.calculateReferralIndexForAllUsers(users);
-    console.log(`Built Referral graph and calculate referral indices, ${this.referralIndices.size} referral indices calculated.`);
+    console.log(`Built Referral graph and calculated referral indices, ${this.referralIndices.size} referral indices calculated.`);
   }
 
   protected calculateReferralIndexForUser(userId: number) {
-    const referralIndex = this.iterativeDFS(userId);
+    const referralIndex = this.iterativeDFSWithCache(userId);
     this.referralIndices.set(userId, referralIndex);
   }
 
@@ -54,14 +55,13 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
     return this.referralIndices;
   }
 
-  private iterativeDFS(startNode: number): number {
+  private iterativeDFSWithCache(userId: number): number {
     let count = 0;
     const visited = new Set<number>();
-    const stack: number[] = [startNode];
+    const stack: number[] = [userId];
 
     while (stack.length > 0) {
       const node = stack.pop()!;
-
       if (!visited.has(node)) {
         visited.add(node);
         const neighbors = this.adjacencyList.get(node) || [];
@@ -69,11 +69,17 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
         for (const neighbor of neighbors) {
           if (!visited.has(neighbor)) {
             count++;
-            stack.push(neighbor);
+            if (this.referralIndices.has(neighbor))  {
+              count += this.referralIndices.get(neighbor);
+            } else {
+              stack.push(neighbor);
+            }
           }
         }
       }
     }
+
+    this.referralIndices.set(userId, count);
     return count;
   }
 
