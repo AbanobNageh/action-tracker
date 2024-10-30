@@ -8,7 +8,7 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
   private adjacencyList: Map<number, number[]> = new Map();
   private referralIndices: Map<number, number> = new Map();
 
-  buildDataStructure(users: User[], actions: Action[]) {
+  async buildDataStructure(users: User[], actions: Action[]) {
     this.adjacencyList.clear();
     this.referralIndices.clear();
 
@@ -30,7 +30,7 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
       }
     });
 
-    this.calculateReferralIndexForAllUsers(users);
+    await this.calculateReferralIndexForAllUsers(users);
     console.log(`Built Referral graph and calculated referral indices, ${this.referralIndices.size} referral indices calculated.`);
   }
 
