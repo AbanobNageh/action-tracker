@@ -79,7 +79,6 @@ export class GraphReferralRelationshipDataSource extends ReferralRelationshipDat
       }
     }
 
-    this.referralIndices.set(userId, count);
     return count;
   }
 
