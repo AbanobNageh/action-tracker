@@ -41,11 +41,14 @@ $ npm run start:dev
 # unit tests
 $ npm run test
 
-# test coverage
+# unit tests coverage
 $ npm run test:cov
 
 # e2e tests
 $ npm run test:e2e
+
+# e2e tests coverage
+$ npm run test:e2e:cov
 ```
 
 ## Test endpoints manually.
