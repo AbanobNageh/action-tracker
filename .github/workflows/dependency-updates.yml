@@ -3,7 +3,7 @@ name: Dependency Updates
 on:
   schedule:
     # Run every two weeks on Monday at 9:00 AM UTC
-    - cron: '0 9 * * 1/2'
+    - cron: '0 9 1,15 * *'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
@@ -69,7 +69,7 @@ jobs:
           # Run ncu in doctor mode with custom test command
           # The -d flag enables doctor mode which tests each update individually
           # The -u flag applies the working updates to package.json
-          ncu -d -u --doctorTest "npm run test" || {
+          ncu -d -u --doctorTest "npm run test:linux" || {
             echo "Doctor mode completed with some updates applied/rejected. Checking final state..."
             # Check if package.json was actually modified
             if ! diff -q package.json package.json.original > /dev/null; then
@@ -149,7 +149,32 @@ jobs:
         if: steps.ncu-check.outputs.updates-available == 'true' && steps.update-deps.outputs.updates-applied == 'true'
         run: |
           echo "Removing temporary files to avoid including them in the PR..."
-          rm -f ncu-available.json package.json.original
+          rm -f package.json.original
+
+      - name: Close existing dependency update PRs
+        if: steps.ncu-check.outputs.updates-available == 'true' && steps.update-deps.outputs.updates-applied == 'true'
+        run: |
+          echo "Checking for existing dependency update PRs to close..."
+          
+          # Get list of open PRs with the dependency label
+          EXISTING_PRS=$(gh pr list --state open --label "dependencies" --json number,title,headRefName --jq '.[] | select(.title | test("🔄 Automated Dependency Updates|Automated Dependency Updates")) | .number')
+          
+          if [ -n "$EXISTING_PRS" ]; then
+            echo "Found existing dependency update PRs to close:"
+            echo "$EXISTING_PRS"
+            
+            # Close each existing PR
+            for PR_NUMBER in $EXISTING_PRS; do
+              echo "Closing PR #$PR_NUMBER..."
+              gh pr close $PR_NUMBER --comment "Closing this PR as a new dependency update is being created with the latest changes." --delete-branch || true
+            done
+            
+            echo "Closed $(echo "$EXISTING_PRS" | wc -l) existing dependency update PR(s)"
+          else
+            echo "No existing dependency update PRs found"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TRIGGER_PAT }}
 
       - name: Create Pull Request
         if: steps.ncu-check.outputs.updates-available == 'true' && steps.update-deps.outputs.updates-applied == 'true'
@@ -173,6 +198,7 @@ jobs:
           delete-branch: true
           labels: |
             dependencies
+            patch-release
 
       - name: Clean up
         if: always()
