@@ -149,7 +149,7 @@ jobs:
         if: steps.ncu-check.outputs.updates-available == 'true' && steps.update-deps.outputs.updates-applied == 'true'
         run: |
           echo "Removing temporary files to avoid including them in the PR..."
-          rm -f package.json.original
+          rm -f package.json.original ncu-available.json
 
       - name: Close existing dependency update PRs
         if: steps.ncu-check.outputs.updates-available == 'true' && steps.update-deps.outputs.updates-applied == 'true'
