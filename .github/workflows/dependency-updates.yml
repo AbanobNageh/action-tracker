@@ -69,7 +69,7 @@ jobs:
           # Run ncu in doctor mode with custom test command
           # The -d flag enables doctor mode which tests each update individually
           # The -u flag applies the working updates to package.json
-          ncu -d -u --doctorTest "npm run test:linux" || {
+          ncu -d -u --doctorTest "npm run test" || {
             echo "Doctor mode completed with some updates applied/rejected. Checking final state..."
             # Check if package.json was actually modified
             if ! diff -q package.json package.json.original > /dev/null; then
